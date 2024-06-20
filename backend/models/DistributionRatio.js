@@ -1,0 +1,33 @@
+const mongoose = require("mongoose");
+
+const Schema = mongoose.Schema;
+
+const TextbookSchema = new Schema({
+  id: { type: Schema.Types.ObjectId, ref: "Textbook", required: true },
+  quantity: { type: Number, required: true },
+});
+
+const RatioSchema = new Schema({
+  organization: {
+    type: Schema.Types.ObjectId,
+    ref: "Organization",
+    required: true,
+  },
+  textbook: [TextbookSchema],
+  
+  payment: {
+    type: String,
+    enum: ["not-required", "paid", "not-paid"],
+    default: "not-required",
+  },
+});
+
+const DistributionRatioSchema = new Schema({
+  preparedBy: { type: Schema.Types.ObjectId, ref: "User", required: true },
+  title: { type: String, required: true },
+  date: { type: Date, default: Date.now },
+  year: { type: Number, required: true },
+  ratio: [RatioSchema],
+});
+
+module.exports = mongoose.model("DistributionRatio", DistributionRatioSchema);
